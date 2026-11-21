@@ -1,0 +1,6 @@
+<Solution>
+  <Folder Name="/backend/">
+    <Project Path="backend/Ecclesia.Api/Ecclesia.Api.csproj" />
+    <Project Path="backend/Ecclesia.Tests/Ecclesia.Tests.csproj" />
+  </Folder>
+</Solution>

@@ -1,0 +1,13 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ecclesia
+      POSTGRES_USER: ecclesia
+      POSTGRES_PASSWORD: ecclesia
+    ports:
+      - "5432:5432"
+    volumes:
+      - ecclesia-db:/var/lib/postgresql/data
+volumes:
+  ecclesia-db:
