@@ -61,6 +61,7 @@ export class AppComponent implements AfterViewInit {
   parking = false;
   demo = false;
   advanced = false;
+  resourcesOpen = false;
   days = [
     'dimanche',
     'lundi',

@@ -7,8 +7,29 @@
     <span class="status-dot"></span> À la découverte des lieux de foi
   </div>
   <span class="region">LIÈGE, BELGIQUE <span>⌄</span></span>
+  <button class="resources-toggle" type="button" (click)="resourcesOpen = !resourcesOpen" [attr.aria-expanded]="resourcesOpen" aria-controls="resources">
+    <span aria-hidden="true">✧</span> Ressources <span aria-hidden="true">{{ resourcesOpen ? '−' : '+' }}</span>
+  </button>
 </header>
 <main>
+  <section id="resources" class="resources" *ngIf="resourcesOpen" aria-labelledby="resources-title">
+    <div class="resources-heading">
+      <div><span class="small-label">POUR ALLER PLUS LOIN</span><h2 id="resources-title">Lectures & communautés</h2><p>Quelques pistes pour lire la Bible et découvrir des communautés chrétiennes.</p></div>
+      <button class="resources-close" type="button" (click)="resourcesOpen = false" aria-label="Fermer les ressources">×</button>
+    </div>
+    <div class="resources-grid">
+      <div class="resource-group"><h3>Lire la Bible</h3>
+        <a href="https://www.aelf.org/bible" target="_blank" rel="noopener noreferrer"><strong>AELF <span>↗</span></strong><small>Bible et textes liturgiques catholiques en français</small></a>
+        <a href="https://www.bible.com/fr" target="_blank" rel="noopener noreferrer"><strong>YouVersion <span>↗</span></strong><small>Bible en ligne et traductions en plusieurs langues</small></a>
+      </div>
+      <div class="resource-group"><h3>À Liège et en Belgique</h3>
+        <a href="https://www.evechedeliege.be/" target="_blank" rel="noopener noreferrer"><strong>Diocèse de Liège <span>↗</span></strong><small>Église catholique · actualités et paroisses</small></a>
+        <a href="https://fr.protestant.link/resume-des-districts-francophones/" target="_blank" rel="noopener noreferrer"><strong>Église Protestante Unie de Belgique <span>↗</span></strong><small>Paroisses protestantes, notamment dans le district de Liège</small></a>
+        <a href="https://www.epeliege.be/" target="_blank" rel="noopener noreferrer"><strong>Église Protestante Évangélique de Liège <span>↗</span></strong><small>Communauté et activités à Liège</small></a>
+      </div>
+    </div>
+    <p class="resources-note">Ces liens ouvrent des sites indépendants dans un nouvel onglet.</p>
+  </section>
   <section class="intro">
     <div>
       <div class="eyebrow"><span></span> TROUVER UN LIEU DE CULTE</div>

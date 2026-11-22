@@ -427,11 +427,87 @@ footer {
 footer span {
   float: right;
 }
+
+/* Keep the map and controls comfortable on ordinary and ultrawide displays. */
+.topbar {
+  min-height: 76px;
+  height: auto;
+  padding: 16px clamp(20px, 3vw, 100px);
+  gap: clamp(16px, 1.4vw, 42px);
+}
+.brand { font-size: clamp(28px, 1.15vw, 38px); }
+.top-note, .region { font-size: clamp(12px, .5vw, 17px); }
+main {
+  max-width: 3200px;
+  padding: 0 clamp(20px, 3vw, 100px);
+}
+.intro { padding: clamp(32px, 2vw, 64px) 0 clamp(24px, 1.4vw, 44px); }
+h1 { font-size: clamp(38px, 2vw, 64px); }
+.intro p { font-size: clamp(15px, .65vw, 21px); }
+.eyebrow, .small-label { font-size: clamp(11px, .48vw, 16px); }
+.workspace {
+  height: clamp(650px, 67vh, 1100px);
+  grid-template-columns: clamp(390px, 20vw, 650px) minmax(0, 1fr);
+}
+.search-head h2, .results-head h2 { font-size: clamp(22px, .95vw, 32px); }
+label, select, .advanced input:not([type="checkbox"]), .advanced-toggle,
+.locate, .apply, .result-text strong, .error, .empty, .detail p {
+  font-size: clamp(14px, .55vw, 19px);
+}
+.range-labels, .sort, .result-text small, .distance, .sidebar-foot,
+.map-caption strong, .map-caption small, .search-area, .detail-grid strong,
+.detail-actions a, footer { font-size: clamp(12px, .48vw, 17px); }
+.detail-grid small { font-size: clamp(11px, .44vw, 15px); }
+.detail { width: min(clamp(360px, 18vw, 580px), 90%); padding: clamp(25px, 1.2vw, 40px); }
+.detail h2 { font-size: clamp(25px, 1.1vw, 36px); }
+.detail h3 { font-size: clamp(19px, .8vw, 27px); }
+.result { padding-top: clamp(17px, .7vw, 24px); padding-bottom: clamp(17px, .7vw, 24px); }
+.result-text { min-width: 0; overflow-wrap: anywhere; }
+
+.resources-toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #f3f5ef;
+  color: #294d46;
+  border: 1px solid #dce6dd;
+  border-radius: 6px;
+  padding: 12px 16px;
+  font-size: clamp(13px, .5vw, 17px);
+  font-weight: 700;
+  white-space: nowrap;
+}
+.resources-toggle:hover, .resources-toggle[aria-expanded="true"] { background: #e7eee7; }
+.resources {
+  margin-top: 28px;
+  padding: clamp(24px, 1.5vw, 48px);
+  background: #fff;
+  border: 1px solid #e6e9e2;
+  border-radius: 8px;
+  box-shadow: 0 8px 35px #334b3910;
+}
+.resources-heading { display: flex; justify-content: space-between; gap: 20px; }
+.resources-heading h2 { font: 500 clamp(25px, 1.2vw, 40px) "Playfair Display", serif; margin: 8px 0; }
+.resources-heading p, .resources-note { color: #75867d; font-size: clamp(14px, .53vw, 18px); line-height: 1.5; }
+.resources-close { align-self: flex-start; background: transparent; border: 0; color: #52645d; font-size: 30px; line-height: 1; }
+.resources-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(24px, 3vw, 80px); margin-top: 28px; }
+.resource-group h3 { font: 500 clamp(20px, .85vw, 28px) "Playfair Display", serif; margin-bottom: 12px; }
+.resource-group a { display: block; padding: 14px 0; text-decoration: none; border-top: 1px solid #edf0eb; }
+.resource-group a:hover strong { color: #a75c40; text-decoration: underline; }
+.resource-group strong, .resource-group small { display: block; }
+.resource-group strong { color: #294d46; font-size: clamp(15px, .58vw, 20px); }
+.resource-group strong span { color: #a75c40; }
+.resource-group small { color: #75867d; font-size: clamp(13px, .5vw, 17px); margin-top: 5px; }
+.resources-note { margin-top: 20px; }
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible { outline: 3px solid #a75c40; outline-offset: 3px; }
 @media (max-width: 800px) {
   .top-note,
   .region {
     display: none;
   }
+  .topbar { justify-content: space-between; }
+  .resources-grid { grid-template-columns: 1fr; }
+  .resources { margin-top: 20px; }
   .intro {
     align-items: start;
     gap: 20px;
