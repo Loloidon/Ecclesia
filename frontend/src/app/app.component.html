@@ -1,30 +1,238 @@
-<header class="topbar"><div class="brand"><span class="brand-icon">✦</span><span>ecclesia<span class="brand-dot">.</span></span></div><div class="top-note"><span class="status-dot"></span> À la découverte des lieux de foi</div><span class="region">LIÈGE, BELGIQUE <span>⌄</span></span></header>
-<main>
- <section class="intro"><div><div class="eyebrow"><span></span> TROUVER UN LIEU DE CULTE</div><h1>Un lieu pour <em>se retrouver.</em></h1><p>Découvrez les églises et les communautés chrétiennes près de vous.</p></div><button class="locate" (click)="locate()"><span>◎</span> Me géolocaliser</button></section>
- <section class="workspace">
-  <aside class="sidebar">
-   <div class="search-head"><div><span class="small-label">EXPLORER AUTOUR DE VOUS</span><h2>Votre recherche</h2></div><span class="compass">✳</span></div>
-   <div class="field"><label for="radius">Rayon de recherche <strong>{{radius}} km</strong></label><input id="radius" type="range" min="1" max="100" [(ngModel)]="radius" (change)="search()"><div class="range-labels"><span>1 km</span><span>100 km</span></div></div>
-   <div class="field"><label class="check"><input type="checkbox" [(ngModel)]="demo" (change)="search()"> Données de démonstration fictives</label></div><div class="field"><label for="confession">Confession</label><select id="confession" [(ngModel)]="confession" (change)="search()"><option value="">Toutes les confessions</option><option>Catholique</option><option>Orthodoxe</option><option>Protestant</option></select></div>
-   <button class="advanced-toggle" (click)="advanced=!advanced"><span>☷ &nbsp; Filtres avancés</span><span>{{advanced ? '−' : '+'}}</span></button>
-   <div class="advanced" *ngIf="advanced">
-    <label>Juridiction ou tradition<input [(ngModel)]="jurisdiction" placeholder="Ex. Orthodoxe roumaine"></label>
-    <label>Rite liturgique<input [(ngModel)]="rite" placeholder="Ex. Byzantin"></label>
-    <label>Type de célébration<input [(ngModel)]="type" placeholder="Ex. Divine Liturgie"></label>
-    <label>Langue<input [(ngModel)]="language" placeholder="Ex. Français"></label>
-    <label>Jour<select [(ngModel)]="day"><option value="">Tous les jours</option><option *ngFor="let d of days; index as i" [value]="i">{{d | titlecase}}</option></select></label>
-    <div class="times"><label>À partir de<input type="time" [(ngModel)]="from"></label><label>Jusqu’à<input type="time" [(ngModel)]="to"></label></div>
-    <label class="check"><input type="checkbox" [(ngModel)]="accessible"> Accessible PMR</label><label class="check"><input type="checkbox" [(ngModel)]="parking"> Stationnement à proximité</label>
-    <button class="apply" (click)="search()">Appliquer les filtres</button>
-   </div>
-   <div class="results-head"><div><span class="small-label">PRÈS DE VOUS</span><h2>Les lieux <span>{{churches.length}}</span></h2></div><span class="sort">Distance ↑</span></div>
-   <p class="error" *ngIf="error" role="alert">{{error}}</p><p class="empty" *ngIf="loading">Recherche en cours…</p><p class="empty" *ngIf="!loading && !error && !churches.length">Aucun lieu trouvé. Élargissez le rayon ou modifiez les filtres.</p>
-   <div class="result-list"><button class="result" *ngFor="let c of churches" (click)="select(c)" [class.active]="selected?.id===c.id"><span class="result-icon">✛</span><span class="result-text"><strong>{{c.name}}</strong><small>{{c.confession || 'Confession non renseignée'}}</small><small>⌁ &nbsp;{{c.address || 'Adresse non disponible'}}</small></span><span class="distance">{{c.distanceKm | number:'1.1-1'}} km <b>↗</b></span></button></div>
-   <div class="sidebar-foot">Données © contributeurs OpenStreetMap<br>Les informations peuvent être incomplètes.</div>
-  </aside>
-  <div class="map-wrap"><div id="map" aria-label="Carte interactive des lieux de culte"></div><div class="map-caption"><span>⌖</span><div><strong>{{located ? 'Votre position' : 'Zone de recherche'}}</strong><small>{{lat | number:'1.3-3'}}, {{lon | number:'1.3-3'}}</small></div></div><button class="search-area" *ngIf="moved" (click)="search(true)">↻ &nbsp; Rechercher dans cette zone</button>
-   <div class="detail" *ngIf="selected as c"><button class="close" aria-label="Fermer" (click)="selected=undefined">×</button><span class="small-label">LIEU DE CULTE</span><h2>{{c.name}}</h2><p>{{c.address || 'Information non disponible'}}</p><div class="detail-grid"><div><small>CONFESSION</small><strong>{{c.confession || 'Information non disponible'}}</strong></div><div><small>JURIDICTION</small><strong>{{c.jurisdiction || 'Information non disponible'}}</strong></div><div><small>ACCESSIBILITÉ PMR</small><strong>{{c.accessible === null ? 'Information non disponible' : c.accessible ? 'Oui' : 'Non'}}</strong></div><div><small>STATIONNEMENT</small><strong>{{c.parking === null ? 'Information non disponible' : c.parking ? 'Oui' : 'Non'}}</strong></div></div><h3>Célébrations</h3><p *ngIf="!c.celebrations.length">Information non disponible</p><p *ngFor="let s of c.celebrations">{{s.type || 'Célébration'}} · {{days[s.dayOfWeek]}} {{s.time}} · {{s.language || 'langue non disponible'}} <a *ngIf="validUrl(s.sourceUrl)" [href]="s.sourceUrl" target="_blank" rel="noopener noreferrer">Source ↗</a></p><div class="detail-actions"><a [href]="directions(c)" target="_blank" rel="noopener noreferrer">Itinéraire ↗</a><a *ngIf="validUrl(c.website)" [href]="c.website" target="_blank" rel="noopener noreferrer">Site web ↗</a><a *ngIf="c.osmKey" [href]="'https://www.openstreetmap.org/'+c.osmKey" target="_blank" rel="noopener noreferrer">Source OSM ↗</a></div></div>
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-icon">✦</span
+    ><span>ecclesia<span class="brand-dot">.</span></span>
   </div>
- </section>
- <footer>Fait pour rapprocher les communautés. <span>Les horaires doivent être vérifiés auprès des communautés.</span></footer>
+  <div class="top-note">
+    <span class="status-dot"></span> À la découverte des lieux de foi
+  </div>
+  <span class="region">LIÈGE, BELGIQUE <span>⌄</span></span>
+</header>
+<main>
+  <section class="intro">
+    <div>
+      <div class="eyebrow"><span></span> TROUVER UN LIEU DE CULTE</div>
+      <h1>Un lieu pour <em>se retrouver.</em></h1>
+      <p>Découvrez les églises et les communautés chrétiennes près de vous.</p>
+    </div>
+    <button class="locate" (click)="locate()">
+      <span>◎</span> Me géolocaliser
+    </button>
+  </section>
+  <section class="workspace">
+    <aside class="sidebar">
+      <div class="search-head">
+        <div>
+          <span class="small-label">EXPLORER AUTOUR DE VOUS</span>
+          <h2>Votre recherche</h2>
+        </div>
+        <span class="compass">✳</span>
+      </div>
+      <div class="field">
+        <label for="radius"
+          >Rayon de recherche <strong>{{ radius }} km</strong></label
+        ><input
+          id="radius"
+          type="range"
+          min="1"
+          max="100"
+          [(ngModel)]="radius"
+          (change)="search()"
+        />
+        <div class="range-labels"><span>1 km</span><span>100 km</span></div>
+      </div>
+      <div class="field">
+        <label class="check"
+          ><input type="checkbox" [(ngModel)]="demo" (change)="search()" />
+          Données de démonstration fictives</label
+        >
+      </div>
+      <div class="field">
+        <label for="confession">Confession</label
+        ><select id="confession" [(ngModel)]="confession" (change)="search()">
+          <option value="">Toutes les confessions</option>
+          <option>Catholique</option>
+          <option>Orthodoxe</option>
+          <option>Protestant</option>
+        </select>
+      </div>
+      <button class="advanced-toggle" (click)="advanced = !advanced">
+        <span>☷ &nbsp; Filtres avancés</span
+        ><span>{{ advanced ? "−" : "+" }}</span>
+      </button>
+      <div class="advanced" *ngIf="advanced">
+        <label
+          >Juridiction ou tradition<input
+            [(ngModel)]="jurisdiction"
+            placeholder="Ex. Orthodoxe roumaine"
+        /></label>
+        <label
+          >Rite liturgique<input [(ngModel)]="rite" placeholder="Ex. Byzantin"
+        /></label>
+        <label
+          >Type de célébration<input
+            [(ngModel)]="type"
+            placeholder="Ex. Divine Liturgie"
+        /></label>
+        <label
+          >Langue<input [(ngModel)]="language" placeholder="Ex. Français"
+        /></label>
+        <label
+          >Jour<select [(ngModel)]="day">
+            <option value="">Tous les jours</option>
+            <option *ngFor="let d of days; index as i" [value]="i">
+              {{ d | titlecase }}
+            </option>
+          </select></label
+        >
+        <div class="times">
+          <label>À partir de<input type="time" [(ngModel)]="from" /></label
+          ><label>Jusqu’à<input type="time" [(ngModel)]="to" /></label>
+        </div>
+        <label class="check"
+          ><input type="checkbox" [(ngModel)]="accessible" /> Accessible
+          PMR</label
+        ><label class="check"
+          ><input type="checkbox" [(ngModel)]="parking" /> Stationnement à
+          proximité</label
+        >
+        <button class="apply" (click)="search()">Appliquer les filtres</button>
+      </div>
+      <div class="results-head">
+        <div>
+          <span class="small-label">PRÈS DE VOUS</span>
+          <h2>
+            Les lieux <span>{{ churches.length }}</span>
+          </h2>
+        </div>
+        <span class="sort">Distance ↑</span>
+      </div>
+      <p class="error" *ngIf="error" role="alert">{{ error }}</p>
+      <p class="empty" *ngIf="importStatus === 'running'">Import OpenStreetMap en cours…</p>
+      <p class="error" *ngIf="importStatus === 'failed'">Import OpenStreetMap indisponible. Les données déjà importées restent accessibles ; relancez l’API pour réessayer.</p>
+      <p class="empty" *ngIf="loading">Recherche en cours…</p>
+      <p class="empty" *ngIf="!loading && !error && !churches.length">
+        Aucun lieu trouvé. Élargissez le rayon ou modifiez les filtres.
+      </p>
+      <div class="result-list">
+        <button
+          class="result"
+          *ngFor="let c of churches"
+          (click)="select(c)"
+          [class.active]="selected?.id === c.id"
+        >
+          <span class="result-icon">✛</span
+          ><span class="result-text"
+            ><strong>{{ c.name }}</strong
+            ><small>{{ c.confession || "Confession non renseignée" }}</small
+            ><small
+              >⌁ &nbsp;{{ c.address || "Adresse non disponible" }}</small
+            ></span
+          ><span class="distance"
+            >{{ c.distanceKm | number: "1.1-1" }} km <b>↗</b></span
+          >
+        </button>
+      </div>
+      <div class="sidebar-foot">
+        Données © contributeurs OpenStreetMap<br />Les informations peuvent être
+        incomplètes.
+      </div>
+    </aside>
+    <div class="map-wrap">
+      <div id="map" aria-label="Carte interactive des lieux de culte"></div>
+      <div class="map-caption">
+        <span>⌖</span>
+        <div>
+          <strong>{{ located ? "Votre position" : "Zone de recherche" }}</strong
+          ><small
+            >{{ lat | number: "1.3-3" }}, {{ lon | number: "1.3-3" }}</small
+          >
+        </div>
+      </div>
+      <button class="search-area" *ngIf="moved" (click)="search(true)">
+        ↻ &nbsp; Rechercher dans cette zone
+      </button>
+      <div class="detail" *ngIf="selected as c">
+        <button
+          class="close"
+          aria-label="Fermer"
+          (click)="selected = undefined"
+        >
+          ×</button
+        ><span class="small-label">LIEU DE CULTE</span>
+        <h2>{{ c.name }}</h2>
+        <p>{{ c.address || "Information non disponible" }}</p>
+        <div class="detail-grid">
+          <div>
+            <small>CONFESSION</small
+            ><strong>{{ c.confession || "Information non disponible" }}</strong>
+          </div>
+          <div>
+            <small>JURIDICTION</small
+            ><strong>{{
+              c.jurisdiction || "Information non disponible"
+            }}</strong>
+          </div>
+          <div>
+            <small>ACCESSIBILITÉ PMR</small
+            ><strong>{{
+              c.accessible === null
+                ? "Information non disponible"
+                : c.accessible
+                  ? "Oui"
+                  : "Non"
+            }}</strong>
+          </div>
+          <div>
+            <small>STATIONNEMENT</small
+            ><strong>{{
+              c.parking === null
+                ? "Information non disponible"
+                : c.parking
+                  ? "Oui"
+                  : "Non"
+            }}</strong>
+          </div>
+        </div>
+        <h3>Célébrations</h3>
+        <p *ngIf="c.serviceTimes">Horaires OSM non confirmés : {{ c.serviceTimes }}</p>
+        <p *ngIf="!c.celebrations.length && !c.serviceTimes">Horaires de service non renseignés</p>
+        <p *ngFor="let s of c.celebrations">
+          {{ s.type || "Célébration" }} · {{ days[s.dayOfWeek] }} {{ s.time }} ·
+          {{ s.language || "langue non disponible" }}
+          · {{ s.verifiedAt && s.sourceUrl ? 'Source renseignée, vérifiée le ' + (s.verifiedAt | date:'dd/MM/yyyy') : 'Non confirmé' }}
+          <a
+            *ngIf="validUrl(s.sourceUrl)"
+            [href]="s.sourceUrl"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Source ↗</a
+          >
+        </p>
+        <h3>Ouverture</h3>
+        <p>{{ c.openingHours ? 'Horaires OSM non confirmés : ' + c.openingHours : 'Horaires d’ouverture non renseignés' }}</p>
+        <div class="detail-actions">
+          <a [href]="directions(c)" target="_blank" rel="noopener noreferrer"
+            >Itinéraire ↗</a
+          ><a
+            *ngIf="validUrl(c.website)"
+            [href]="c.website"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Site web ↗</a
+          ><a
+            *ngIf="c.osmKey"
+            [href]="'https://www.openstreetmap.org/' + c.osmKey"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Source OSM ↗</a
+          >
+        </div>
+      </div>
+    </div>
+  </section>
+  <footer>
+    Fait pour rapprocher les communautés.
+    <span>Les horaires doivent être vérifiés auprès des communautés.</span>
+  </footer>
 </main>
